@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>แดชบอร์ดยอดขายตก (นำเข้าไฟล์ C360)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#F3F5F7;--sf:#fff;--ink:#17212B;--mute:#5B6773;--line:#DDE2E8;--b1:#1B3A63;--b2:#3E6397;--b3:#7C9CC6;--b4:#B3C7E3;--slate:#98A4B3;--a1:#B9770E;--a2:#D79A2B;--a3:#E6BB68;--a4:#F0D49C;--warn:#9A5B00;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10161D;--sf:#18212B;--ink:#E7ECF1;--mute:#9AA7B5;--line:#2A3541;--b1:#8DB4EA;--b2:#5F8DCB;--b3:#416AA3;--b4:#2F4B76;--slate:#667384;--a1:#E8AE45;--a2:#C9902F;--a3:#9C6D22;--a4:#7A5418;--warn:#E8AE45;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10161D;--sf:#18212B;--ink:#E7ECF1;--mute:#9AA7B5;--line:#2A3541;--b1:#8DB4EA;--b2:#5F8DCB;--b3:#416AA3;--b4:#2F4B76;--slate:#667384;--a1:#E8AE45;--a2:#C9902F;--a3:#9C6D22;--a4:#7A5418;--warn:#E8AE45;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.6 'Sarabun','Noto Sans Thai','Tahoma',system-ui,sans-serif}
+main{max-width:1040px;margin:0 auto;padding:28px 20px 56px}
+h1{font-size:clamp(22px,4.2vw,32px);line-height:1.3;margin:0 0 8px;font-weight:700;max-width:30em}
+h2{font-size:18px;margin:0 0 4px;font-weight:700}
+p{margin:0}
+.mute{color:var(--mute)}
+.sm{font-size:13px}
+section{margin-top:40px;padding-top:20px;border-top:1px solid var(--line)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:18px;margin-top:22px}
+.kpis b{display:block;font-size:26px;font-weight:600;line-height:1.2;font-variant-numeric:tabular-nums}
+.kpis span{font-size:13px;color:var(--mute)}
+.bar{display:flex;height:44px;margin-top:16px;border-radius:6px;overflow:hidden;gap:2px}
+.bar i{display:block;height:100%;min-width:2px}
+.brace{display:flex;gap:2px;margin-top:6px;font-size:13px;color:var(--mute)}
+.brace div{border-top:2px solid var(--line);padding-top:4px;white-space:nowrap;overflow:hidden}
+.leg{width:100%;border-collapse:collapse;margin-top:16px;font-variant-numeric:tabular-nums}
+.leg td,.tbl td,.tbl th{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.leg td:nth-child(n+2){text-align:right;white-space:nowrap}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:8px;vertical-align:-1px}
+.cols{display:grid;gap:36px;grid-template-columns:1fr}
+@media (min-width:820px){.cols{grid-template-columns:1fr 1fr}}
+.row{margin-top:16px}
+.row .t{display:flex;justify-content:space-between;gap:12px}
+.row .t span:last-child{font-variant-numeric:tabular-nums;white-space:nowrap}
+.tr{height:10px;background:var(--line);border-radius:5px;margin-top:5px;overflow:hidden}
+.tr+.tr{margin-top:3px}
+.tr b{display:block;height:100%;border-radius:5px}
+.scroll{overflow-x:auto;margin-top:12px}
+.tbl{width:100%;border-collapse:collapse;min-width:640px;font-size:14px}
+.tbl th{font-weight:600;color:var(--mute);font-size:13px}
+.tbl td.n,.tbl th.n{text-align:right;font-variant-numeric:tabular-nums}
+.flag{color:var(--warn);font-weight:600}
+ul{margin:10px 0 0;padding-left:20px}
+li{margin-top:6px}
+
+.flt{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:22px}
+.flt label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute)}
+.flt select,.flt input{font:inherit;color:var(--ink);background:var(--sf);border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-width:0}
+.rs{font:inherit;color:var(--ink);background:var(--sf);border:1px solid var(--line);border-radius:6px;padding:8px 14px;cursor:pointer;align-self:end}
+:focus-visible{outline:2px solid var(--b2);outline-offset:2px}
+.cl{cursor:pointer}.leg tr.cl:hover td{background:var(--line)}.leg tr.on td{font-weight:600}
+th.sort{cursor:pointer;user-select:none;white-space:nowrap}
+.tw{max-height:560px;overflow:auto;margin-top:12px}.tbl.w{min-width:1100px}
+.tw thead th{position:sticky;top:0;background:var(--bg);z-index:1}
+
+[hidden]{display:none!important}
+.up{margin-top:24px}
+.dz{display:block;margin-top:12px;padding:26px 16px;text-align:center;cursor:pointer;background:var(--sf);border:2px dashed var(--line);border-radius:8px}
+.dz:hover,.dz.on{border-color:var(--b2)}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <p class="mute sm" id="meta"></p>
+  <h1 id="h1">แดชบอร์ดยอดขายตก</h1>
+  <p id="sub" class="mute">นำเข้าไฟล์จาก C360 เพื่อเริ่มดูข้อมูล</p>
+</header>
+
+<section class="up" id="up">
+  <h2>นำเข้าไฟล์จาก C360</h2>
+  <p class="mute sm">เลือกไฟล์ Excel ที่ export จากหน้า Top 100 drop ไฟล์ถูกอ่านในเบราว์เซอร์ของคุณเท่านั้น ไม่ถูกส่งไปที่ใด และข้อมูลจะหายเมื่อปิดหน้านี้</p>
+  <label class="dz" id="dz" tabindex="0"><input id="file" type="file" accept=".xlsx,.xls" hidden><span id="dzt">ลากไฟล์มาวางที่นี่ หรือกดเพื่อเลือกไฟล์ .xlsx</span></label>
+  <p id="err" class="flag sm" role="alert"></p>
+</section>
+<div id="app" hidden>
+<section class="flt" aria-label="ตัวกรอง">
+  <label>ค้นหา<input id="q" type="search" placeholder="ชื่อลูกค้า สาขา หรือผู้รับผิดชอบ"></label>
+  <label>กลุ่มลูกค้า<select id="fSeg"></select></label>
+  <label>ภูมิภาค<select id="fReg"></select></label>
+  <label>สถานะ AS<select id="fAs"></select></label>
+  <label>การเข้าเยี่ยม<select id="fVis"><option value="">ทั้งหมด</option><option value="Y">ไม่เข้าเยี่ยมเกิน 30 วัน</option><option value="N">เข้าเยี่ยมภายใน 30 วัน</option></select></label>
+  <label>ยอดช่วงปัจจุบัน<select id="fNov"><option value="">ทั้งหมด</option><option value="0">เป็นศูนย์</option><option value="1">ยังมียอด</option></select></label>
+  <label>ผู้รับผิดชอบ<select id="fOwn"></select></label>
+  <button class="rs" id="reset" type="button">ล้างตัวกรอง</button>
+</section>
+<div class="kpis" id="kpis"></div>
+
+<section>
+  <h2>ยอดที่ตกมาจากใคร</h2>
+  <p class="mute sm">กดที่แถวในตารางเพื่อกรองกลุ่มลูกค้า กดซ้ำเพื่อยกเลิก (ล้านบาท)</p>
+  <div class="bar" id="bar" role="img" aria-label="สัดส่วนยอดที่ตกแยกตามกลุ่มลูกค้า"></div>
+  <table class="leg" id="leg"></table>
+</section>
+
+<section>
+  <div class="cols">
+    <div><h2>ลูกค้าที่ตกมากสุด 10 ราย</h2><p class="mute sm">รวมทุกสาขาที่อยู่ในลิสต์ ยอดช่วงก่อนหน้าและช่วงปัจจุบัน (ล้านบาท)</p><div id="top"></div></div>
+    <div><h2>แยกตามภูมิภาค</h2><p class="mute sm">ยอดที่ตก (ล้านบาท) กดที่แถวเพื่อกรองภูมิภาค</p><div id="reg"></div></div>
+  </div>
+</section>
+
+<section>
+  <h2>รายแถวที่ตรงเงื่อนไข</h2>
+  <p class="mute sm" id="tcount"></p>
+  <div class="tw"><table class="tbl w" id="tbl"></table></div>
+</section>
+
+<section>
+  <h2>ข้อควรระวัง</h2>
+  <ul class="sm" id="cav"></ul>
+</section>
+</div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const SEG=["ภาครัฐ/มูลนิธิ/CP (ลูกค้าโครงการ)", "ผู้จัดจำหน่าย (DISTRIBUTOR)", "บริการ ไม่รวมภาครัฐ (SERVICE)", "ร้านค้าปลีก (FD RETAILER)", "HORECA", "อื่น ๆ (NF RETAILER, OTHER)"], COL=['--b1','--a1','--b3','--a2','--slate','--a4'];
+const GOV=['OFFICE (GOVERNMENT SECTOR)','FOUNDATION/ASSOCIATION/ROTARY','CP GROUP'], MG={'DISTRIBUTOR':1,'SERVICE':2,'FD RETAILER':3,'HORECA':4};
+const MON=['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'], TH=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+let D=[], TOT=0, L={cur:'',prev:'',ly:''};
+function parse(buf,name){
+ const bad=m=>{document.getElementById('err').textContent=m;};
+ bad('');
+ if(!window.XLSX){bad('โหลดไลบรารีอ่าน Excel ไม่สำเร็จ ตรวจการเชื่อมต่ออินเทอร์เน็ตแล้วลองใหม่');return;}
+ let aoa=null,hi=-1;
+ try{const wb=XLSX.read(buf,{type:'array'});
+  for(const sn of wb.SheetNames){const a=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:null});const i=a.findIndex(r=>r&&r.includes('customer_name'));if(i>=0){aoa=a;hi=i;break;}}
+ }catch(e){bad('อ่านไฟล์ไม่ได้ ตรวจว่าเป็นไฟล์ .xlsx ที่ export จาก C360');return;}
+ if(hi<0){bad('ไม่พบคอลัมน์ customer_name ในไฟล์ ตรวจว่าเป็นไฟล์ Top 100 drop จาก C360');return;}
+ const h=aoa[hi], ix=n=>h.indexOf(n), g=(r,n)=>{const i=ix(n);return i<0?null:r[i];};
+ const sc=h.map((c,i)=>{const m=/^sales_mtd_([a-z]{3})_(\d{4})$/.exec(c||'');const mo=m?MON.indexOf(m[1]):-1;return mo<0?null:{i,mo,y:+m[2],ym:+m[2]*12+mo};}).filter(Boolean).sort((a,b)=>b.ym-a.ym);
+ const cur=sc[0], prev=cur&&sc.find(x=>x.ym==cur.ym-1), ly=cur&&sc.find(x=>x.ym==cur.ym-12);
+ if(!cur||!prev){bad('ไม่พบคอลัมน์ยอดขายรายเดือน (sales_mtd_เดือน_ปี) ในไฟล์');return;}
+ const n=v=>v==null||v===''?0:+v||0;
+ const rows=aoa.slice(hi+1).filter(r=>r&&g(r,'customer_name')&&(ix('list')<0||g(r,'list')=='top_drop'));
+ if(!rows.length){bad('ไม่พบแถวข้อมูลลูกค้าในไฟล์');return;}
+ D=rows.map(r=>{const oc=n(r[prev.i])/1e6,nv=n(r[cur.i])/1e6,m=g(r,'all_stores_mom_pct'),d=g(r,'days_since_sales');
+  return {c:g(r,'customer_name'),no:String(g(r,'customer_no')==null?'':g(r,'customer_no')).replace(/\.0$/,''),s:g(r,'store_name')||'',r:g(r,'region')||'',
+   sg:GOV.includes(g(r,'cust_type'))?0:(MG[g(r,'main_group')]||5),o:g(r,'owner')||'',a:g(r,'as_ever_13m')||'',oc,nv,n25:ly?n(r[ly.i])/1e6:0,dr:oc-nv,pc:oc?(nv-oc)/oc:0,
+   m:m==null||m===''?null:+m,d:d==null||d===''?null:+d,nvz:g(r,'flag_no_visit')==='Y'};});
+ L={cur:TH[cur.mo],prev:TH[prev.mo],ly:TH[cur.mo]+' ปีก่อน'};
+ document.getElementById('meta').textContent=String((aoa[0]||[])[0]||'')||'ข้อมูลจากไฟล์ที่นำเข้า';
+ document.getElementById('dzt').textContent='โหลดแล้ว: '+name+' ('+D.length+' แถว) กดหรือลากไฟล์ใหม่มาวางเพื่อเปลี่ยนไฟล์';
+ document.getElementById('app').hidden=false; setup(); render();
+}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const f1=n=>n.toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1});
+const pc=n=>Math.round(n*100)+'%', sp=n=>(n>0?'+':n<0?'−':'')+Math.abs(n*100).toFixed(1)+'%';
+const bar=(w,c,op)=>'<div class="tr"><b style="width:'+Math.max(w,0.5)+'%;background:var('+c+');opacity:'+(op||1)+'"></b></div>';
+const opts=(id,first,vals)=>$(id).innerHTML='<option value="">'+first+'</option>'+vals.map(v=>{const a=Array.isArray(v);return '<option value="'+esc(a?v[0]:v)+'">'+esc(a?v[1]:v)+'</option>'}).join('');
+const uniq=k=>[...new Set(D.map(r=>r[k]))].filter(Boolean).sort((a,b)=>a.localeCompare(b,'th'));
+function setup(){opts('fSeg','ทั้งหมด',SEG.map((s,i)=>[i,s])); opts('fReg','ทั้งหมด',uniq('r')); opts('fAs','ทั้งหมด',uniq('a')); opts('fOwn','ทั้งหมด',uniq('o'));
+ ['q','fVis','fNov'].forEach(id=>$(id).value=''); TOT=D.reduce((a,r)=>a+r.dr,0);
+ const na=D.filter(r=>r.a=='not in AS').length, ny=D.filter(r=>!(r.n25>0)).length;
+ $('cav').innerHTML=['ลิสต์เรียงจากรายที่ตกมากสุด ไม่มีลูกค้าที่ยอดโต จึงบอกการตกสุทธิของบริษัทไม่ได้',
+  na+' แถวเป็นลูกค้า not in AS และ '+ny+' แถวไม่มียอด '+L.ly+' ถ้าสัดส่วนสูง ไม่ควรใช้ YoY เป็นตัวเทียบ',
+  'ซื้อล่าสุดเป็นวันที่ลูกค้าซื้อที่สาขาใดก็ได้ ส่วนยอดรวมทุกสาขาคือการเปลี่ยนแปลง MoM ของลูกค้าทั้งรายจากไฟล์ต้นฉบับ',
+  'การจัดกลุ่มภาครัฐ/มูลนิธิ/CP ใช้ประเภทลูกค้าในไฟล์ เพื่อดูภาพรวมเท่านั้น ไม่ใช่การยืนยันสาเหตุที่ยอดตก ควรตรวจกับทีมที่ดูแลลูกค้า'].map(t=>'<li>'+t+'</li>').join('');}
+let sort={k:'dr',d:-1};
+function F(skip){const q=$('q').value.trim().toLowerCase(),sg=$('fSeg').value,rg=$('fReg').value,as=$('fAs').value,v=$('fVis').value,n=$('fNov').value,ow=$('fOwn').value;
+ return D.filter(r=>(!q||(r.c+' '+r.s+' '+r.o).toLowerCase().includes(q))&&(skip=='sg'||sg===''||r.sg==sg)&&(skip=='rg'||!rg||r.r==rg)&&(!as||r.a==as)&&(!v||(v=='Y')==r.nvz)&&(!n||(n=='0')==(r.nv<=0))&&(!ow||r.o==ow));}
+const sum=(a,k)=>a.reduce((s,r)=>s+r[k],0);
+function render(){
+ const rows=F(), oc=sum(rows,'oc'), nv=sum(rows,'nv'), dr=oc-nv, cust=new Set(rows.map(r=>r.no)).size;
+ const filtered=rows.length<D.length;
+ $('h1').textContent=rows.length?'ยอดตก '+f1(dr)+' ล้านบาท ('+sp(oc?(nv-oc)/oc:0)+' เทียบ '+L.prev+') จาก '+rows.length+' แถว '+cust+' ลูกค้า':'ไม่มีแถวที่ตรงเงื่อนไข กดล้านตัวกรองเพื่อเริ่มใหม่';
+ const gs=SEG.map((s,i)=>({i,v:sum(rows.filter(r=>r.sg==i),'dr')})).sort((a,b)=>b.v-a.v);
+ $('sub').textContent=rows.length?(filtered?'คิดเป็น '+pc(dr/TOT)+' ของยอดตกทั้งลิสต์ ('+f1(TOT)+' ล้านบาท) ':'')+'กลุ่มที่ตกมากสุดคือ '+SEG[gs[0].i]+' '+pc(dr?gs[0].v/dr:0)+' ของยอดตกในชุดนี้':'';
+ const z=rows.filter(r=>r.nv<=0);
+ $('kpis').innerHTML=[[f1(oc),'ยอด '+L.prev+' (ล้านบาท)'],[f1(nv),'ยอด '+L.cur+' (ล้านบาท)'],[sp(oc?(nv-oc)/oc:0),'เปลี่ยนแปลงเทียบ '+L.prev],[z.length+' แถว','ยอด '+L.cur+' เป็นศูนย์ (ยอด '+L.prev+' '+f1(sum(z,'oc'))+' ล้านบาท)']].map(k=>'<div><b>'+k[0]+'</b><span>'+k[1]+'</span></div>').join('');
+ // segment bar + legend (ignores the segment filter so you can switch)
+ const base=F('sg'), bd=sum(base,'dr'), sel=$('fSeg').value;
+ const sv=SEG.map((s,i)=>({i,n:s,v:sum(base.filter(r=>r.sg==i),'dr'),c:base.filter(r=>r.sg==i).length}));
+ $('bar').innerHTML=sv.filter(s=>s.v>0).map(s=>'<i title="'+esc(s.n)+' '+f1(s.v)+'" style="width:'+(bd?s.v/bd*100:0)+'%;background:var('+COL[s.i]+');opacity:'+(sel===''||sel==s.i?1:.3)+'"></i>').join('');
+ $('leg').innerHTML=sv.map(s=>'<tr class="cl'+(sel==s.i&&sel!==''?' on':'')+'" tabindex="0" role="button" data-i="'+s.i+'"><td><span class="sw" style="background:var('+COL[s.i]+')"></span>'+esc(s.n)+'</td><td>'+s.c+' แถว</td><td>'+f1(s.v)+'</td><td>'+pc(bd?s.v/bd:0)+'</td></tr>').join('');
+ // top customers
+ const cm={}; rows.forEach(r=>{const c=cm[r.no]||(cm[r.no]={n:r.c,k:0,oc:0,nv:0});c.k++;c.oc+=r.oc;c.nv+=r.nv;});
+ const tc=Object.values(cm).sort((a,b)=>(b.oc-b.nv)-(a.oc-a.nv)).slice(0,10), mx=Math.max(1e-9,...tc.map(c=>c.oc));
+ $('top').innerHTML=tc.map(c=>'<div class="row"><div class="t"><span>'+esc(c.n)+' <span class="mute sm">('+c.k+' แถว)</span></span><span>'+f1(c.oc)+' → '+f1(c.nv)+'</span></div>'+bar(c.oc/mx*100,'--b2')+bar(c.nv/mx*100,'--a1')+'</div>').join('')+(tc.length?'<p class="mute sm" style="margin-top:12px"><span class="sw" style="background:var(--b2)"></span>'+L.prev+' <span class="sw" style="background:var(--a1);margin-left:10px"></span>'+L.cur+'</p>':'');
+ // regions
+ const rb=F('rg'), rg=$('fReg').value, rm={}; rb.forEach(r=>rm[r.r]=(rm[r.r]||0)+r.dr);
+ const rl=Object.entries(rm).sort((a,b)=>b[1]-a[1]), rmx=Math.max(1e-9,...rl.map(x=>x[1]));
+ $('reg').innerHTML=rl.map(x=>'<div class="row cl" tabindex="0" role="button" data-r="'+esc(x[0])+'"><div class="t"><span'+(rg==x[0]?' style="font-weight:600"':'')+'>'+esc(x[0])+'</span><span>'+f1(x[1])+'</span></div>'+bar(x[1]/rmx*100,'--b2',rg===''||rg==x[0]?1:.35)+'</div>').join('');
+ // table
+ const ks=sort.k, cmp=(a,b)=>{const x=a[ks],y=b[ks];return (typeof x=='string'?x.localeCompare(y,'th'):(x==null?-1e18:x)-(y==null?-1e18:y))*sort.d};
+ const H=[['c','ลูกค้า'],['s','สาขา'],['sg','กลุ่ม'],['o','ผู้รับผิดชอบ'],['a','AS'],['oc',L.prev],['nv',L.cur],['dr','ตก'],['pc','เปลี่ยนแปลง'],['m','ยอดรวมทุกสาขา MoM'],['d','ซื้อล่าสุด (วันก่อน)'],['nvz','ไม่เข้าเยี่ยม &gt;30 วัน']];
+ const num=new Set(['oc','nv','dr','pc','m','d']);
+ $('tcount').textContent=rows.length+' แถว กดหัวคอลัมน์เพื่อเรียงลำดับ ยอดเป็นล้านบาท';
+ $('tbl').innerHTML='<thead><tr>'+H.map(h=>'<th class="sort'+(num.has(h[0])?' n':'')+'" data-k="'+h[0]+'">'+h[1]+(ks==h[0]?(sort.d>0?' ▲':' ▼'):'')+'</th>').join('')+'</tr></thead><tbody>'+rows.slice().sort(cmp).map(r=>'<tr><td>'+esc(r.c)+'</td><td>'+esc(r.s)+'</td><td>'+esc(SEG[r.sg])+'</td><td>'+esc(r.o)+'</td><td>'+esc(r.a)+'</td><td class="n">'+r.oc.toFixed(2)+'</td><td class="n">'+r.nv.toFixed(2)+'</td><td class="n">'+r.dr.toFixed(2)+'</td><td class="n">'+sp(r.pc)+'</td><td class="n">'+(r.m==null?'-':sp(r.m))+'</td><td class="n">'+(r.d==null?'-':r.d)+'</td><td>'+(r.nvz?'<span class="flag">ใช่</span>':'ไม่')+'</td></tr>').join('')+'</tbody>';
+}
+function toggle(id,v){const e=$(id);e.value=(e.value==v?'':v);render();}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-i],[data-r],[data-k]');if(!t)return;
+ if(t.dataset.i!==undefined)toggle('fSeg',t.dataset.i);else if(t.dataset.r!==undefined)toggle('fReg',t.dataset.r);
+ else{const k=t.dataset.k;sort=sort.k==k?{k,d:-sort.d}:{k,d:(k=='c'||k=='s'||k=='sg'||k=='o'||k=='a')?1:-1};render();}});
+document.addEventListener('keydown',e=>{if((e.key=='Enter'||e.key==' ')&&e.target.matches('[data-i],[data-r]')){e.preventDefault();e.target.click();}});
+['q','fSeg','fReg','fAs','fVis','fNov','fOwn'].forEach(id=>$(id).addEventListener('input',render));
+$('reset').addEventListener('click',()=>{['q','fSeg','fReg','fAs','fVis','fNov','fOwn'].forEach(id=>$(id).value='');render();});
+const fl=$('file'), dz=$('dz');
+const pick=f=>{if(!f)return;const rd=new FileReader();rd.onload=()=>parse(rd.result,f.name);rd.onerror=()=>{$('err').textContent='อ่านไฟล์ไม่ได้';};rd.readAsArrayBuffer(f);};
+fl.addEventListener('change',()=>{pick(fl.files[0]);fl.value='';});
+['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('on');}));
+['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('on');}));
+dz.addEventListener('drop',e=>pick(e.dataTransfer.files[0]));
+dz.addEventListener('keydown',e=>{if(e.key=='Enter'||e.key==' '){e.preventDefault();fl.click();}});
+['dragover','drop'].forEach(ev=>window.addEventListener(ev,e=>e.preventDefault()));
+</script>
+</body>
+</html>
